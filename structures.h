@@ -5,6 +5,9 @@
 #ifndef CELLULARAUTOMATA_STRUCTURES_H
 #define CELLULARAUTOMATA_STRUCTURES_H
 
+#include <SDL2/SDL_ttf.h>
+#include <stdbool.h>
+
 typedef struct Cells{
     //Current state of the cell : Alive or dead
     bool alive;
@@ -23,5 +26,24 @@ typedef struct World{
     //The cells
     Cells** array;
 }World;
+
+typedef struct Menu{
+    SDL_Renderer* renderer;
+    
+    SDL_Surface* title_surface;
+    SDL_Surface* random_surface;
+    SDL_Surface* draw_surface;
+
+    SDL_Texture* title_texture;
+    SDL_Texture* random_texture;
+    SDL_Texture* draw_texture;
+
+    TTF_Font* font;
+
+    SDL_Rect title_shape;
+    SDL_Rect random_shape;
+    SDL_Rect draw_shape;
+
+}Menu;
 
 #endif //CELLULARAUTOMATA_STRUCTURES_H

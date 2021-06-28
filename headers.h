@@ -8,5 +8,6 @@
 #include "cells.h"
 #include "world.h"
 #include "structures.h"
+#include "SDL2/SDL_ttf.h"
 
 #endif //CELLULARAUTOMATA_HEADERS_H
