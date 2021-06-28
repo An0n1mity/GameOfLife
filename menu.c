@@ -35,6 +35,9 @@ Menu* CreateMenu(SDL_Renderer* renderer, SDL_Surface** surfaces, SDL_Texture** t
     menu->draw_shape.x = window_w - menu->draw_shape.w - 100;
     menu->draw_shape.y = window_h/2;
 
+    menu->random = false;
+    menu->draw = false;
+    
     return menu;
 }
 
@@ -76,6 +79,7 @@ void CheckOverlightClick(Menu* menu, int mouse_x, int mouse_y)
 		menu->random_surface = TTF_RenderText_Solid(menu->font, "Random", color_r);
 		menu->random_texture = SDL_CreateTextureFromSurface(menu->renderer, menu->random_surface);
 		DrawMenu(menu);
+		menu->random = true;
 	}
 
 	else
@@ -83,7 +87,7 @@ void CheckOverlightClick(Menu* menu, int mouse_x, int mouse_y)
 			menu->random_surface = TTF_RenderText_Solid(menu->font, "Random", color_w);
 		menu->random_texture = SDL_CreateTextureFromSurface(menu->renderer, menu->random_surface);
 		DrawMenu(menu);
-
+		menu->random = false;
 	}
 
 	if((mouse_x > draw_tl_corner_x && mouse_x < draw_lr_corner_x) && (mouse_y > draw_tl_corner_y && mouse_y < draw_lr_corner_y))
@@ -92,6 +96,7 @@ void CheckOverlightClick(Menu* menu, int mouse_x, int mouse_y)
 		menu->draw_surface = TTF_RenderText_Solid(menu->font, "Draw", color_r);
 		menu->draw_texture = SDL_CreateTextureFromSurface(menu->renderer, menu->draw_surface);
 		DrawMenu(menu);
+		menu->draw = true;
 	}
 
 	else
@@ -99,7 +104,7 @@ void CheckOverlightClick(Menu* menu, int mouse_x, int mouse_y)
 			menu->draw_surface = TTF_RenderText_Solid(menu->font, "Draw", color_w);
 		menu->draw_texture = SDL_CreateTextureFromSurface(menu->renderer, menu->draw_surface);
 		DrawMenu(menu);
-
+		menu->draw = false;
 	}
 		
 }

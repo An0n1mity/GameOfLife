@@ -44,6 +44,9 @@ typedef struct Menu{
     SDL_Rect random_shape;
     SDL_Rect draw_shape;
 
+    bool random;
+    bool draw;
+
 }Menu;
 
 #endif //CELLULARAUTOMATA_STRUCTURES_H

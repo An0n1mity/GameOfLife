@@ -31,8 +31,9 @@ int main(){
 
     bool show_menu = true;
     bool simulate = false;
-    bool automata = true;
     bool draw = false;
+    bool drawing = false;
+    bool random = false;  
     int mouse_x, mouse_y;
 
     //Simulation interface
@@ -69,71 +70,84 @@ int main(){
     while(show_menu && SDL_WaitEvent(&events)){
 
 	switch(events.type){
-	    case SDL_KEYDOWN:
-		show_menu = false;
-		break;
-
 	     case SDL_MOUSEMOTION:
 		SDL_GetMouseState(&mouse_x, &mouse_y);
 		CheckOverlightClick(menu, mouse_x, mouse_y);
     		break;
+		
+	     case SDL_MOUSEBUTTONDOWN:
+		if(menu->random)
+			random = true;
+		else if(menu->draw)
+			draw = true;
+		show_menu = false;
+		break;
 	}
 
     }
 
     SDL_DestroyWindow(menu_window);
 
-    for (int i = 0; i < world->height; ++i) {
-        for (int j = 0; j < world->width; ++j) {
-            if(world->array[i][j].alive)
-             DrawCell(&world->array[i][j], simulation_renderer);
-        }
+
+    //Generate random intital world
+    if(random){
+	printf("Random\n");
+	draw = false;
+	simulate = true;
+	
+	RandomizeWorld(world);
+
+    	for (int i = 0; i < world->height; ++i) {
+        	for (int j = 0; j < world->width; ++j) {
+            	if(world->array[i][j].alive)
+        	     	DrawCell(&world->array[i][j], simulation_renderer);
+        	}
+    	}
+	SDL_RenderPresent(simulation_renderer);
     }
 
-    SDL_RenderPresent(simulation_renderer);
      //Wait for a mouse event
-        while(SDL_WaitEvent(&events) && automata){
+     if(draw){
+        while(SDL_WaitEvent(&events) && draw){
             //If the mouse is clicked
             switch(events.type) {
                 case SDL_MOUSEBUTTONDOWN:
-                    draw = true;
-                    break;
-
-                case SDL_MOUSEBUTTONUP:
-                    draw = false;
-                    break;
-
-                case SDL_KEYDOWN:
-                    draw = false;
-                    simulate = true;
-                    automata = false;
-                    break;
+              	    drawing = true;
+		    draw = false;
+		    printf("Drawing\n");
+		    break;
+		
             }
-
-            if(draw)
+	}
+       
+	while(drawing)
             {
+		SDL_PollEvent(&events);
                 SDL_GetMouseState(&mouse_x, &mouse_y);
                 MakeAlive(world, mouse_x, mouse_y);
                 DrawCell(&world->array[mouse_y/10][mouse_x/10], simulation_renderer);
                 SDL_RenderPresent(simulation_renderer);
 
-                while(SDL_PollEvent(&events)){
                     switch(events.type) {
                         case SDL_KEYDOWN:
-                            draw = false;
+			    printf("Stop Drawing\n");
+			    drawing = false;
                             simulate = true;
-                            automata = false;
                             break;
                     }
-                }
-            }
+             }
         }
 
-        while(simulate && SDL_PollEvent(&events)){
+
+        while(simulate){
+	    printf("Simulate\n");
+	    SDL_PollEvent(&events);
 	    switch(events.key.keysym.sym)
 	    {
 	    	case SDLK_ESCAPE:
 			simulate = false;
+			printf("End\n");
+	    		break;
 	    }
 
             DetectNeighbors(world);
