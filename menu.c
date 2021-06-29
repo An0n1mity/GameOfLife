@@ -21,8 +21,8 @@ Menu* CreateMenu(SDL_Renderer* renderer, SDL_Surface** surfaces, SDL_Texture** t
     menu->draw_surface = surfaces[2];
 
     menu->title_shape.w = (window_w/100)*3;
-    menu->title_shape.h = 100;
-    menu->title_shape.x = window_w/2 - menu->title_shape.w;
+    menu->title_shape.h = (window_w/100)*5;
+    menu->title_shape.x = window_w/2 - menu->title_shape.w - 100;
     menu->title_shape.y = 50;
 
     menu->random_shape.w = (window_w/100)*3;

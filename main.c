@@ -4,12 +4,17 @@
 
 #include "cells.h"
 #include "menu.h"
+#include "thread.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <pthread.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+
+World* world;
+bool thread = true;
 
 int main(){
     //Initi SDL libraries
@@ -26,8 +31,12 @@ int main(){
     srand(seed);
 
     //Create the world in wich the cells will evolute
-    World* world = CreateWorld(1000, 1000);
-    //RandomizeWorld(world);
+    world = CreateWorld(1000, 1000);
+    //Create a thread 
+    pthread_t thread_id;
+    
+    if(world->array[0][0].alive)
+	    printf("Thread changed it\n");
 
     bool show_menu = true;
     bool simulate = false;
@@ -88,6 +97,7 @@ int main(){
 
     SDL_DestroyWindow(menu_window);
 
+    SDL_RenderPresent(simulation_renderer);
 
     //Generate random intital world
     if(random){
@@ -96,6 +106,7 @@ int main(){
 	simulate = true;
 	
 	RandomizeWorld(world);
+	pthread_create(&thread_id, NULL, AcessWorld, NULL);
 
     	for (int i = 0; i < world->height; ++i) {
         	for (int j = 0; j < world->width; ++j) {
@@ -121,26 +132,29 @@ int main(){
 	}
        
 	while(drawing)
-            {
+        {
 		SDL_PollEvent(&events);
-                SDL_GetMouseState(&mouse_x, &mouse_y);
-                MakeAlive(world, mouse_x, mouse_y);
-                DrawCell(&world->array[mouse_y/10][mouse_x/10], simulation_renderer);
-                SDL_RenderPresent(simulation_renderer);
-
-                    switch(events.type) {
+        	switch(events.type) {
                         case SDL_KEYDOWN:
 			    printf("Stop Drawing\n");
 			    drawing = false;
                             simulate = true;
                             break;
-                    }
-             }
+
+			case SDL_MOUSEMOTION:
+			 	SDL_GetMouseState(&mouse_x, &mouse_y);
+                		MakeAlive(world, mouse_x, mouse_y);
+                		DrawCell(&world->array[mouse_y/10][mouse_x/10], simulation_renderer);
+                		SDL_RenderPresent(simulation_renderer);
+			    	break;
+               }
         }
+     }
 
 
         while(simulate){
 	    printf("Simulate\n");
+	    //pthread_join(thread_id, NULL);
 	    SDL_PollEvent(&events);
 	    switch(events.key.keysym.sym)
 	    {
@@ -156,7 +170,8 @@ int main(){
             SDL_RenderPresent(simulation_renderer);
             SDL_Delay(10);
         }
-
+	thread = false;
+	pthread_join(thread_id, NULL);
 	SDL_DestroyWindow(simulation_window);
 	SDL_Quit();
 	return 0;
