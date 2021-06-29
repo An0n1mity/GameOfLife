@@ -7,6 +7,6 @@ extern World* world;
 extern bool thread;
 
 void* AcessWorld();
-void RandomCells();
+void RandomCells(World* world);
 
 #endif

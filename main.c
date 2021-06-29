@@ -3,8 +3,10 @@
 //
 
 #include "cells.h"
+#include "world.h"
 #include "menu.h"
 #include "thread.h"
+#include "structures.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,11 +29,10 @@ int main(){
         exit(2);
     }
 
-    long seed = 28474958696052;
-    srand(seed);
+    srand(time(NULL));
 
     //Create the world in wich the cells will evolute
-    world = CreateWorld(1000, 1000);
+    world = CreateWorld(500, 500);
     //Create a thread 
     pthread_t thread_id;
     
@@ -46,8 +47,10 @@ int main(){
     int mouse_x, mouse_y;
 
     //Simulation interface
-    SDL_Window* simulation_window = SDL_CreateWindow("CellularAutomata", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, world->width, world->height, SDL_WINDOW_SHOWN);
+    SDL_Window* simulation_window = SDL_CreateWindow("CellularAutomata", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, world->width*10, world->height*10, SDL_WINDOW_SHOWN);
     SDL_Renderer* simulation_renderer = SDL_CreateRenderer(simulation_window, -1, SDL_RENDERER_ACCELERATED);
+	world->renderer = simulation_renderer;
+
     //Menu interface
     SDL_Window* menu_window = SDL_CreateWindow("CellularAutomata", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, world->width, world->height, SDL_WINDOW_SHOWN);
     SDL_Renderer* menu_renderer = SDL_CreateRenderer(menu_window, -1, SDL_RENDERER_ACCELERATED);
@@ -105,7 +108,7 @@ int main(){
 	draw = false;
 	simulate = true;
 	
-	RandomizeWorld(world);
+	//RandomizeWorld(world);
 	pthread_create(&thread_id, NULL, AcessWorld, NULL);
 
     	for (int i = 0; i < world->height; ++i) {

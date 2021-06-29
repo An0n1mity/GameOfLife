@@ -7,9 +7,9 @@
 
 #include <stdbool.h>
 #include <SDL2/SDL.h>
-#include "headers.h"
 #include "structures.h"
 
+void RandomCells(World* world);
 void DrawCells(World* world, SDL_Renderer* renderer);
 void DrawNeighbors(World* world, SDL_Renderer* renderer);
 void DetectNeighbors(World* world);

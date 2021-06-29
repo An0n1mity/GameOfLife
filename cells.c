@@ -4,6 +4,24 @@
 
 #include "headers.h"
 
+void RandomCells(World* world)
+//Create random cells island square of 3*3
+{
+	int center_x = rand()%world->width;
+	int center_y = rand()%world->height;
+	
+	world->array[center_y][center_x].alive = true;
+	for(int x = center_x-5; x<=center_x+5; x++){
+		for(int y = center_y-5; y<=center_y+5; y++)
+		{
+			if((x >= 0 && x < world->width) && (y >= 0 && y < world->height))
+			       if(rand()%2)
+					world->array[y][x].alive = true;
+		}
+	}
+	printf("x : %d, y : %d\n", center_x, center_y);
+}
+
 void DrawCells(World* world, SDL_Renderer* renderer)
 {
     for (int i = 0; i < world->height; ++i) {

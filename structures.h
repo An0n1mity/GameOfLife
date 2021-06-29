@@ -25,6 +25,7 @@ typedef struct World{
     int height;
     //The cells
     Cells** array;
+    SDL_Renderer* renderer;
 }World;
 
 typedef struct Menu{
